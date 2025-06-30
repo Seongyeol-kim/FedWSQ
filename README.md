@@ -1,8 +1,5 @@
 # FedWSQ: Efficient Federated Learning with WS and DANUQ
 
-<a href="https://iccv2025.thecvf.com/" target="_blank">
-  <img src="https://img.shields.io/badge/ICCV%202025-green?style=for-the-badge" alt="ICCV 2025"/>
-</a>
 
 This repository is the official implementation of *[ICCV 2025](https://iccv.thecvf.com/)* paper ***["FedWSQ: Efficient Federated Learning with Weight Standardization and Distribution-Aware Non-Uniform Quantization"]()***
 
