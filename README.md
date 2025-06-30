@@ -1,7 +1,3 @@
-# FedWSQ
-FedWSQ: Efficient Federated Learning with WS and DANUQ
-
-
 # FedWSQ: Efficient Federated Learning with WS and DANUQ
 
 
