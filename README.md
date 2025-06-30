@@ -33,12 +33,15 @@ conda activate fedwsq
 
 ### 🗂 Dataset
 
-CIFAR-10 and CIFAR-100 will be downloaded automatically.  
-Only Tiny-ImageNet requires manual download.:
-- [CIFAR-10 & CIFAR-100](https://www.cs.toronto.edu/~kriz/cifar.html)
-- [Tiny-ImageNet](https://www.image-net.org/index.php)
-
-  
+[CIFAR-10 & CIFAR-100](https://www.cs.toronto.edu/~kriz/cifar.html) will be downloaded automatically.  
+[Tiny-ImageNet](https://www.image-net.org/index.php) must be downloaded manually and extracted into the `./data/` directory.
+```
+fedwsq (this repository)
+   └── data
+      ├── cifar-10-python.tar.gz
+      ├── cifar-100-python.tar.gz
+      └── tiny-imagenet-200.zip
+```
 
 ### 🛠️ Arguments
 The following `arguments` can be adjusted to customize experiments (**default is bold**):
@@ -58,7 +61,7 @@ The following `arguments` can be adjusted to customize experiments (**default is
 - **Batch Size Defaults:** `--batch_size=50` for CIFAR datasets, `--batch_size=100` for Tiny-ImageNet.
 - To enable **Fixed-Bit Allocation (FBA)**, set `--quantizer.random_bit=fixed_alloc`.
 - To enable **Dynamic-Bit Allocation (DBA)**, set `--quantizer.random_bit=rand_alloc`.
-- When `--quantizer.random_bit=none`, `--quantizer.wt_bit` is ignored.
+- When `--quantizer.random_bit` is set to `fixed_alloc` or `rand_alloc`, `--quantizer.wt_bit` is ignored.
 - When `--split.mode=iid`, `--split.alpha` is ignored.
  
 ### 📌 Quick Start
