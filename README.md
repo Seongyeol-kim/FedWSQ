@@ -3,7 +3,7 @@
 
 This repository is the official implementation of *[ICCV 2025](https://iccv.thecvf.com/)* paper ***["FedWSQ: Efficient Federated Learning with Weight Standardization and Distribution-Aware Non-Uniform Quantization"]()***
 
-By [Seung-Wook Kim](https://www.linkedin.com/in/%EC%8A%B9%EC%9A%B1-%EA%B9%80-003a7310a/), [Seong-yeol Kim](https://github.com/Seongyeol-kim), [Ji-ah Kim](https://github.com/Kim-Jiah), [Seowon Ji](https://www.linkedin.com/in/seowon-ji-7587741a9/) and [Se-Ho Lee](https://dblp.org/pid/158/9405.html)
+By [Seung-Wook Kim](https://www.linkedin.com/in/%EC%8A%B9%EC%9A%B1-%EA%B9%80-003a7310a/), [Seong-yeol Kim](https://github.com/Seongyeol-kim), [Jiah Kim](https://github.com/Kim-Jiah), [Seowon Ji](https://www.linkedin.com/in/seowon-ji-7587741a9/) and [Se-Ho Lee](https://dblp.org/pid/158/9405.html)
 
 
 <img src="tiny_result.png" alt="teaser" width="1000"/>
@@ -83,7 +83,7 @@ If you use this code in a publication, please cite our paper.
 
 ```bibtex
 @inproceedings{kim2025Efficient,
-  author    = {Kim, Seung-Wook and Kim, Seong-Yeol and Kim, Ji-ah and Ji, Seowon and Lee, Se-Ho},
+  author    = {Kim, Seung-Wook and Kim, Seong-Yeol and Kim, Jiah and Ji, Seowon and Lee, Se-Ho},
   title     = {Efficient Federated Learning with Weight Standardization and Distribution-Aware Non-Uniform Quantization},
   booktitle = {ICCV},
   year      = {2025},
