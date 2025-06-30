@@ -36,7 +36,7 @@ conda activate fedwsq
 [CIFAR-10 & CIFAR-100](https://www.cs.toronto.edu/~kriz/cifar.html) will be downloaded automatically.  
 [Tiny-ImageNet](https://www.image-net.org/index.php) must be downloaded manually and extracted into the `./data/` directory.
 ```
-fedwsq (this repository)
+FedWSQ (this repository)
    └── data
       ├── cifar-10-python.tar.gz
       ├── cifar-100-python.tar.gz
