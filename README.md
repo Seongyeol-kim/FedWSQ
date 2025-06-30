@@ -68,7 +68,21 @@ python3 federated_train.py visible_devices="0" client=base server=base dataset=c
 python3 federated_train.py visible_devices="0" client=base server=base dataset=tinyimagenet trainer.num_clients=500 split.mode=iid trainer.participation_rate=0.02 quantizer=WSQ
 ```
 
+## 📚 Citation
+
+If you use this code in a publication, please cite our paper.
+
+```bibtex
+@inproceedings{kim2025Efficient,
+  author    = {Kim, Seung-Wook and Kim, Seong-Yeol and Kim, Ji-ah and Ji, Seowon and Lee, Se-Ho},
+  title     = {Efficient Federated Learning with Weight Standardization and Distribution-Aware Non-Uniform Quantization},
+  booktitle = {ICCV},
+  year      = {2025},
+}
+
 
 ## 🙏 Acknowledgement
 
 This repository builds upon the excellent framework provided by [FedACG](https://github.com/geehokim/FedACG). Thanks to the original authors for their great contribution.
+
+
