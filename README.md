@@ -30,6 +30,7 @@ conda env create -f fedwsq.yaml
 conda activate fedwsq
 ```
 
+
 ### 🗂 Dataset
 
 CIFAR-10 and CIFAR-100 will be downloaded automatically.  
@@ -39,7 +40,7 @@ Only Tiny-ImageNet requires manual download.:
 
   
 
-### ⚙️ Arguments
+### 🛠️ Arguments
 The following `arguments` can be adjusted to customize experiments (**default is bold**):
 
 | Argument                       | Options                                                     |
