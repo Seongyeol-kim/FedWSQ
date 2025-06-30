@@ -63,12 +63,12 @@ python3 federated_train.py visible_devices="0" client=base server=base dataset=c
 
 > CIFAR-10, 100 clients, Dirichlet (0.1) split, 5% participation, FBA
 ```
-python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar10 trainer.num_clients=100 split.mode=Dirichlet split.alpha=0.1 trainer.participation_rate=0.05 quantizer=WSQLG quantizer.random_bit: 'fixed_alloc'
+python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar10 trainer.num_clients=100 split.mode=dirichlet split.alpha=0.1 trainer.participation_rate=0.05 quantizer=WSQLG quantizer.random_bit: 'fixed_alloc'
 ```
 
 > CIFAR-100, 500 clients, Dirichlet (0.3) split, 2% participation, DBA
 ```
-python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar100 trainer.num_clients=500 split.mode=Dirichlet split.alpha=0.3 trainer.participation_rate=0.02 quantizer=WSQLG quantizer.random_bit: 'rand_alloc'
+python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar100 trainer.num_clients=500 split.mode=dirichlet split.alpha=0.3 trainer.participation_rate=0.02 quantizer=WSQLG quantizer.random_bit: 'rand_alloc'
 ```
 
 > Tiny-ImageNet, 100 clients, iid, 5% participation
