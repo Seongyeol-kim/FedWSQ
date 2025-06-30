@@ -31,7 +31,9 @@ conda activate fedwsq
 ```
 
 ### 🗂 Dataset
-CIFAR-10 and CIFAR-100 will be downloaded automatically. Only Tiny-ImageNet requires manual download.
+
+CIFAR-10 and CIFAR-100 will be downloaded automatically.  
+Only Tiny-ImageNet requires manual download.:
 - [CIFAR-10 & CIFAR-100](https://www.cs.toronto.edu/~kriz/cifar.html)
 - [Tiny-ImageNet](https://www.image-net.org/index.php)
 
@@ -43,56 +45,57 @@ The following `arguments` can be adjusted to customize experiments (**default is
 | Argument                       | Options                                                     |
 |--------------------------------|-------------------------------------------------------------|
 | `--dataset`                    | **`cifar10`** , `cifar100`, `tinyimagenet`                  |
-| `--quantizer.wt_bit`               | `1`, `2`, **`4`**, `...`                                    |
+| `--quantizer.wt_bit`           | `1`, **`4`**, `...`                                    |
+| `--quantizer.random_bit`       | **`none`** , `fixed_alloc` , `rand_alloc`                   |
+| `--trainer.num_clients`        | **`100`** , `500` , `...`                                   |
+| `--trainer.participation_rate` | `0.02`, **`0.05`**, `...`                                   |
 | `--split.mode`                 | **`dirichlet`**, `iid`                                      |
 | `--split.alpha`                | `0.03`, `0.05`, `0.1`, **`0.3`** , `0.6`, `...`             |
-| `--trainer.participation_rate` | `0.02`, **`0.05`**, `...`                                   |
-| `--trainer.num_clients`        | **`100`** , `500` , `...`                                   |
-| `--quantizer.random_bit`       | **`none`** , `fixed_alloc` , `rand_alloc`                   |
 
-**⚠️ Note** : When `--split.mode` is set to `iid`, `--split.alpha` is ignored.
+**⚠️ Note**
+- When `--quantizer.random_bit=none`, `--quantizer.wt_bit` is ignored.
+- When `--split.mode=iid`, `--split.alpha` is ignored.
 - To enable **Fixed-Bit Allocation (FBA)**, set `--quantizer.random_bit=fixed_alloc`.
 - To enable **Dynamic-Bit Allocation (DBA)**, set `--quantizer.random_bit=rand_alloc`.
 
  
 ### 📌 Quick Start
-> CIFAR-10, 100 clients, Dirichlet (0.3) split, 5% participation (**default**)  
+> CIFAR-10, 4bits, 100 clients, 5% participation, Dirichlet (0.3) split (**default**)  
 ```
-python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar10 trainer.num_clients=100 split.mode=Dirichlet split.alpha=0.3 trainer.participation_rate=0.05 quantizer=WSQLG, quantizer.random_bit: 'none'
-```
-
-> CIFAR-10, 100 clients, Dirichlet (0.1) split, 5% participation, FBA
-```
-python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar10 trainer.num_clients=100 split.mode=dirichlet split.alpha=0.1 trainer.participation_rate=0.05 quantizer=WSQLG quantizer.random_bit: 'fixed_alloc'
+python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar10 quantizer=WSQLG quantizer.wt_bit=4 quantizer.random_bit=none trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=dirichlet split.alpha=0.3
 ```
 
-> CIFAR-100, 500 clients, Dirichlet (0.3) split, 2% participation, DBA
+> CIFAR-10, FBA(2.33bits), 100 clients, 5% participation, Dirichlet (0.1) split
 ```
-python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar100 trainer.num_clients=500 split.mode=dirichlet split.alpha=0.3 trainer.participation_rate=0.02 quantizer=WSQLG quantizer.random_bit: 'rand_alloc'
+python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar10 quantizer=WSQLG quantizer.random_bit=fixed_alloc trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=dirichlet split.alpha=0.1
 ```
 
-> Tiny-ImageNet, 100 clients, iid, 5% participation
+> CIFAR-100, DBA(2.33bits), 500 clients, 2% participation, Dirichlet (0.3) split
 ```
-python3 federated_train.py visible_devices="0" client=base server=base dataset=tinyimagenet trainer.num_clients=100 split.mode=iid trainer.participation_rate=0.05 quantizer=WSQLG quantizer.random_bit: 'none'
+python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar10 quantizer=WSQLG quantizer.random_bit=rand_alloc trainer.num_clients=500 trainer.participation_rate=0.02 split.mode=dirichlet split.alpha=0.3
+```
+
+> Tiny-ImageNet, 1bits, 100 clients, 5% participation, iid split
+```
+python3 federated_train.py visible_devices="0" client=base server=base dataset=tinyimagenet quantizer=WSQLG quantizer.wt_bit=4 quantizer.random_bit=none trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=iid
 ```
 
 ## References
 ### 📚 Citation
 
-If you use this code in a publication, please cite our paper.
+If you find this work useful for your research, please cite our paper:
 
-```bibtex
+```
 @inproceedings{kim2025Efficient,
   author    = {Kim, Seung-Wook and Kim, Seong-Yeol and Kim, Jiah and Ji, Seowon and Lee, Se-Ho},
   title     = {Efficient Federated Learning with Weight Standardization and Distribution-Aware Non-Uniform Quantization},
   booktitle = {ICCV},
   year      = {2025},
 }
-
-
 ```
+
 ### 🙏 Acknowledgement
 
-This repository builds upon the excellent framework provided by [FedACG](https://github.com/geehokim/FedACG). Thanks to the original authors for their great contribution.
+This code is built on [FedACG](https://github.com/geehokim/FedACG). Thanks to the authors for their great contribution!
 
 
