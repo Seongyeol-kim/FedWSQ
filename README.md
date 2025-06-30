@@ -18,8 +18,8 @@ Extensive experiments on FL benchmark datasets demonstrate that FedWSQ consisten
 
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-20.04.4-E95420?logo=Ubuntu&logoColor=white)](https://ubuntu.com/download)
 [![Python](https://img.shields.io/badge/Python-3.8.13-3776AB?logo=python&logoColor=white)](https://www.anaconda.com/download)
-[![PyTorch](https://img.shields.io/badge/PyTorch-1.12.1-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
-[![PyTorch](https://img.shields.io/badge/CUDA-12.1-76B900?logo=nvidia&logoColor=white)](https://developer.nvidia.com/cuda-downloads)
+[![PyTorch](https://img.shields.io/badge/PyTorch-1.11.0-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![PyTorch](https://img.shields.io/badge/CUDA-11.3-76B900?logo=nvidia&logoColor=white)](https://developer.nvidia.com/cuda-downloads)
 
 We have exported all required dependencies into `fedwsq.yaml`.  
 You can create the environment by running:
