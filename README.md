@@ -43,7 +43,7 @@ The following `arguments` can be adjusted to customize experiments (**default is
 | Argument                       | Options                                                     |
 |--------------------------------|-------------------------------------------------------------|
 | `--dataset`                    | **`cifar10`** , `cifar100`, `tinyimagenet`                  |
-| `--model.wt_bit`               | `1`, `2`, **`4`**, `...`                                    |
+| `--quantizer.wt_bit`               | `1`, `2`, **`4`**, `...`                                    |
 | `--split.mode`                 | **`dirichlet`**, `iid`                                      |
 | `--split.alpha`                | `0.03`, `0.05`, `0.1`, **`0.3`** , `0.6`, `...`             |
 | `--trainer.participation_rate` | `0.02`, **`0.05`**, `...`                                   |
