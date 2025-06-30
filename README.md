@@ -46,7 +46,8 @@ The following `arguments` can be adjusted to customize experiments (**default is
 | Argument                       | Options                                                     |
 |--------------------------------|-------------------------------------------------------------|
 | `--dataset`                    | **`cifar10`** , `cifar100`, `tinyimagenet`                  |
-| `--quantizer.wt_bit`           | `1`, **`4`**, `...`                                    |
+| `--batch_size`                 | **`50`** , `100`, `...`                                     |
+| `--quantizer.wt_bit`           | `1`, **`4`**, `...`                                         |
 | `--quantizer.random_bit`       | **`none`** , `fixed_alloc` , `rand_alloc`                   |
 | `--trainer.num_clients`        | **`100`** , `500` , `...`                                   |
 | `--trainer.participation_rate` | `0.02`, **`0.05`**, `...`                                   |
@@ -54,31 +55,31 @@ The following `arguments` can be adjusted to customize experiments (**default is
 | `--split.alpha`                | `0.03`, `0.05`, `0.1`, **`0.3`** , `0.6`, `...`             |
 
 **⚠️ Note**
-- When `--quantizer.random_bit=none`, `--quantizer.wt_bit` is ignored.
-- When `--split.mode=iid`, `--split.alpha` is ignored.
+- **Batch Size Defaults:** `--batch_size=50` for CIFAR datasets, `--batch_size=100` for Tiny-ImageNet.
 - To enable **Fixed-Bit Allocation (FBA)**, set `--quantizer.random_bit=fixed_alloc`.
 - To enable **Dynamic-Bit Allocation (DBA)**, set `--quantizer.random_bit=rand_alloc`.
-
+- When `--quantizer.random_bit=none`, `--quantizer.wt_bit` is ignored.
+- When `--split.mode=iid`, `--split.alpha` is ignored.
  
 ### 📌 Quick Start
 > CIFAR-10, 4bits, 100 clients, 5% participation, Dirichlet (0.3) split (**default**)  
 ```
-python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar10 quantizer=WSQLG quantizer.wt_bit=4 quantizer.random_bit=none trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=dirichlet split.alpha=0.3
+python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar10 batch_size=50 quantizer=WSQLG quantizer.wt_bit=4 quantizer.random_bit=none trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=dirichlet split.alpha=0.3
 ```
 
 > CIFAR-10, FBA(2.33bits), 100 clients, 5% participation, Dirichlet (0.1) split
 ```
-python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar10 quantizer=WSQLG quantizer.random_bit=fixed_alloc trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=dirichlet split.alpha=0.1
+python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar10 batch_size=50 quantizer=WSQLG quantizer.random_bit=fixed_alloc trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=dirichlet split.alpha=0.1
 ```
 
 > CIFAR-100, DBA(2.33bits), 500 clients, 2% participation, Dirichlet (0.3) split
 ```
-python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar10 quantizer=WSQLG quantizer.random_bit=rand_alloc trainer.num_clients=500 trainer.participation_rate=0.02 split.mode=dirichlet split.alpha=0.3
+python3 federated_train.py visible_devices="0" client=base server=base dataset=cifar10 batch_size=50 quantizer=WSQLG quantizer.random_bit=rand_alloc trainer.num_clients=500 trainer.participation_rate=0.02 split.mode=dirichlet split.alpha=0.3
 ```
 
 > Tiny-ImageNet, 1bits, 100 clients, 5% participation, iid split
 ```
-python3 federated_train.py visible_devices="0" client=base server=base dataset=tinyimagenet quantizer=WSQLG quantizer.wt_bit=4 quantizer.random_bit=none trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=iid
+python3 federated_train.py visible_devices="0" client=base server=base dataset=tinyimagenet batch_size=100 quantizer=WSQLG quantizer.wt_bit=4 quantizer.random_bit=none trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=iid
 ```
 
 ## References
