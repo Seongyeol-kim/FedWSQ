@@ -93,16 +93,19 @@ python federated_train.py model=resnet18 dataset=tinyimagenet batch_size=100 qua
 If you find this work useful for your research, please cite our paper:
 
 ```
-@inproceedings{kim2025Efficient,
-  author    = {Kim, Seung-Wook and Kim, Seong-Yeol and Kim, Jiah and Ji, Seowon and Lee, Se-Ho},
-  title     = {Efficient Federated Learning with Weight Standardization and Distribution-Aware Non-Uniform Quantization},
-  booktitle = {ICCV},
-  year      = {2025},
+@inproceedings{kim2025fedwsq,
+      title={FedWSQ: Efficient Federated Learning with Weight Standardization and Distribution-Aware Non-Uniform Quantization}, 
+      author={Seung-Wook Kim and Seongyeol Kim and Jiah Kim and Seowon Ji and Se-Ho Lee},
+      year={2025},
+      eprint={2506.23516},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2506.23516}, 
 }
 ```
 
 ### 🙏 Acknowledgement
 
-This code is built on [FedACG](https://github.com/geehokim/FedACG). Thanks to the authors for their great contribution!
+This code is built baed on [FedACG](https://github.com/geehokim/FedACG). Thanks to the authors for their great contribution!
 
 
