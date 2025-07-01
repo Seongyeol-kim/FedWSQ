@@ -37,7 +37,7 @@ conda activate fedwsq
 [Tiny-ImageNet](https://www.image-net.org/index.php) must be downloaded manually and unpacked into the `./data/` directory.
 ```
 FedWSQ (this repository)
-   └── data
+   └── data (automatically created)
       ├── cifar-10-python.tar.gz
       ├── cifar-100-python.tar.gz
       └── tiny-imagenet-200.zip
@@ -48,6 +48,7 @@ The following `arguments` can be adjusted to customize experiments (**default is
 
 | Argument                       | Options                                                     |
 |--------------------------------|-------------------------------------------------------------|
+| `--model`                      | `resnet18` , **`resnet18_WS`**                              |
 | `--dataset`                    | **`cifar10`** , `cifar100`, `tinyimagenet`                  |
 | `--batch_size`                 | **`50`** , `100`, `...`                                     |
 | `--quantizer.wt_bit`           | `1`, **`4`**, `...`                                         |
@@ -65,6 +66,7 @@ The following `arguments` can be adjusted to customize experiments (**default is
 - When `--split.mode=iid`, `--split.alpha` is ignored.
  
 ### 📌 Quick Start
+
 > CIFAR-10, 4bits, 100 clients, 5% participation, Dirichlet (0.3) split (**default**)  
 ```
 python federated_train.py visible_devices=0 client=base server=base dataset=cifar10 batch_size=50 quantizer=WSQLG quantizer.wt_bit=4 quantizer.random_bit=none trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=dirichlet split.alpha=0.3
