@@ -73,10 +73,6 @@ class Trainer():
 
         self.clients: List[Client] = [client_type(self.args, client_index=c, model=copy.deepcopy(self.model)) for c in range(self.args.trainer.num_clients)]
         self.server = server
-        # Setting momentum at server
-        if self.args.server.momentum > 0 or self.args.client.get('Dyn'):
-            self.server.set_momentum(self.model)
-
         self.datasets = datasets
         self.local_dataset_split_ids = get_dataset(self.args, self.datasets['train'], mode=self.args.split.mode)
         
@@ -99,16 +95,7 @@ class Trainer():
         if self.args.get('load_model_path'):
             self.load_model()
         
-        # setting local_g, past_local_deltas at clients
-        if self.args.client.get('Dyn'):
-            local_g = copy.deepcopy(self.model.state_dict())
-            for key in local_g.keys():
-                local_g[key] = torch.zeros_like(local_g[key]).to('cpu')
-            self.past_local_deltas = {net_i: copy.deepcopy(local_g) for net_i in range(self.num_clients)}
-            
-        if self.args.quantizer.name == "WSQG" and self.args.quantizer.random_bit == 'fixed_alloc':
-            self.local_wt_bits = np.random.choice(np.array([1, 2, 4]), size=self.args.trainer.num_clients, replace=True)
-        elif self.args.quantizer.name == "WSQLG" and self.args.quantizer.random_bit == 'fixed_alloc':
+        if self.args.quantizer.name == "WSQ" and self.args.quantizer.random_bit == 'fixed_alloc':
             self.local_wt_bits = np.random.choice(np.array([1, 2, 4]), size=self.args.trainer.num_clients, replace=True)
             
             
@@ -131,7 +118,7 @@ class Trainer():
                 subset_classes=self.args.dataset.get('subset_classes'),
                 )
             
-            if self.args.quantizer.name == 'WSQG' or self.args.quantizer.name == 'WSQLG':
+            if self.args.quantizer.name == 'WSQ':
                 wt_bit = self.args.quantizer.wt_bit
                 if self.args.quantizer.random_bit == 'fixed_alloc':
                     wt_bit = self.local_wt_bits[task['client_idx']]
@@ -157,10 +144,6 @@ class Trainer():
                     'trainer': self,
                 }
 
-            # update past_local_deltas, user idx
-            if self.args.client.get('Dyn'):
-                setup_inputs['past_local_deltas'] = self.past_local_deltas
-                setup_inputs['user'] = task['client_idx']
 
             client.setup(**setup_inputs)
             # Local Training

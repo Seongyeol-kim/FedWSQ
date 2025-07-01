@@ -1,4 +1,0 @@
-## Client ##
-type: SAMClient
-ce_loss:
-  weight: 1

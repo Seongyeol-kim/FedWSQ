@@ -56,7 +56,7 @@ defaults:
   - trainer: base
   - client: base
   - evaler: base
-  - dataset: cifar100
+  - dataset: cifar10
   - server: base
   - model: resnet18
   - quantizer: base
