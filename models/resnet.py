@@ -161,8 +161,8 @@ class ResNet(nn.Module):
     
     def update_all_global_std(self, momentum=0.1):
         """모델 내부의 모든 WSConv2d 레이어에서 update_global_std() 호출"""
-        for module in self.modules():  # self.modules()를 사용하면 모델의 모든 서브모듈을 가져옴
-            if isinstance(module, Conv2d):  # WSConv2d인 경우
+        for module in self.modules():
+            if isinstance(module, Conv2d):  
                 module.update_global_std(momentum)
 
     def forward(self, x, return_feature=False):

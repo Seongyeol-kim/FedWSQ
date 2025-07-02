@@ -134,6 +134,7 @@ class Trainer():
                     'wt_bit': wt_bit,
                     'trainer': self,
                 }
+                
             else:
                 setup_inputs = {
                     'state_dict': task['state_dict'],
@@ -245,7 +246,7 @@ class Trainer():
 
             self.model.load_state_dict(updated_global_state_dict)
             
-            if self.args.quantizer.name == "WSQG":
+            if self.args.quantizer.name == "WSQ":
                 self.model.update_all_global_std(self.args.quantizer.momentum)
 
             if self.args.eval.freq > 0 and epoch % self.args.eval.freq == 0:
