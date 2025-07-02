@@ -7,4 +7,5 @@ keyword: []
 wt_bit: 8
 wt_clip_prob: -1
 momentum: 0.1
+scale_vector: 0.1
 random_bit: 'none' # 'fixed_alloc', 'rand_alloc' 
