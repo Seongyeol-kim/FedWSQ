@@ -51,6 +51,7 @@ The following `arguments` can be adjusted to customize experiments (**default is
 | `--model`                      | `resnet18` , **`resnet18_WS`**                              |
 | `--dataset`                    | **`cifar10`** , `cifar100`, `tinyimagenet`                  |
 | `--batch_size`                 | **`50`** , `100`, `...`                                     |
+| `--quantizer.scale_vector`     | **`0.1`** , `0.2` , `...`                                   |
 | `--quantizer.wt_bit`           | `1`, **`4`**, `...`                                         |
 | `--quantizer.random_bit`       | **`none`** , `fixed_alloc` , `rand_alloc`                   |
 | `--trainer.num_clients`        | **`100`** , `500` , `...`                                   |
@@ -59,32 +60,33 @@ The following `arguments` can be adjusted to customize experiments (**default is
 | `--split.alpha`                | `0.03`, `0.05`, `0.1`, **`0.3`** , `0.6`, `...`             |
 
 **⚠️ Note**
-- **Batch Size Defaults:** `--batch_size=50` for CIFAR datasets, `--batch_size=100` for Tiny-ImageNet.
+- **Batch Size:** `--batch_size=50` for CIFAR datasets, `--batch_size=100` for Tiny-ImageNet.
+- The `--quantizer.scale_vector` corresponds to the momentum β used for updating the scaling vector.
 - To enable **Fixed-Bit Allocation (FBA)**, set `--quantizer.random_bit=fixed_alloc`.
 - To enable **Dynamic-Bit Allocation (DBA)**, set `--quantizer.random_bit=rand_alloc`.
 - When `--quantizer.random_bit` is set to `fixed_alloc` or `rand_alloc`, `--quantizer.wt_bit` is ignored.
 - When `--split.mode=iid`, `--split.alpha` is ignored.
- 
+
 ### 📌 Quick Start
 
 > ResNet18_WS, CIFAR-10, 4bits, 100 clients, 5% participation, Dirichlet (0.3) split (**default**)  
 ```
-python federated_train.py model=resnet18_WS dataset=cifar10 batch_size=50 quantizer=WSQ quantizer.random_bit=none quantizer.wt_bit=4 trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=dirichlet split.alpha=0.3
+python federated_train.py model=resnet18_WS dataset=cifar10 batch_size=50 quantizer=WSQ quantizer.scale_vector=0.1 quantizer.random_bit=none quantizer.wt_bit=4 trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=dirichlet split.alpha=0.3
 ```
 
 > ResNet, CIFAR-10, FBA(2.33bits), 100 clients, 5% participation, Dirichlet (0.1) split
 ```
-python federated_train.py model=resnet18 dataset=cifar10 batch_size=50 quantizer=WSQ quantizer.random_bit=fixed_alloc trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=dirichlet split.alpha=0.1
+python federated_train.py model=resnet18 dataset=cifar10 batch_size=50 quantizer=WSQ quantizer.scale_vector=0.1 quantizer.random_bit=fixed_alloc trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=dirichlet split.alpha=0.1
 ```
 
 > ResNet18_WS, CIFAR-100, DBA(2.33bits), 500 clients, 2% participation, Dirichlet (0.3) split
 ```
-python federated_train.py model=resnet18_WS dataset=cifar100 batch_size=50 quantizer=WSQ quantizer.random_bit=rand_alloc trainer.num_clients=500 trainer.participation_rate=0.02 split.mode=dirichlet split.alpha=0.3
+python federated_train.py model=resnet18_WS dataset=cifar100 batch_size=50 quantizer=WSQ quantizer.scale_vector=0.1 quantizer.random_bit=rand_alloc trainer.num_clients=500 trainer.participation_rate=0.02 split.mode=dirichlet split.alpha=0.3
 ```
 
 > ResNet, Tiny-ImageNet, 1bits, 100 clients, 5% participation, iid split
 ```
-python federated_train.py model=resnet18 dataset=tinyimagenet batch_size=100 quantizer=WSQ quantizer.random_bit=none quantizer.wt_bit=1 trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=iid
+python federated_train.py model=resnet18 dataset=tinyimagenet batch_size=100 quantizer=WSQ quantizer.scale_vector=0.1 quantizer.random_bit=none quantizer.wt_bit=1 trainer.num_clients=100 trainer.participation_rate=0.05 split.mode=iid
 ```
 
 ## References
@@ -106,6 +108,6 @@ If you find this work useful for your research, please cite our paper:
 
 ### 🙏 Acknowledgement
 
-This code is built baed on [FedACG](https://github.com/geehokim/FedACG). Thanks to the authors for their great contribution!
+This code is built based on [FedACG](https://github.com/geehokim/FedACG). Thanks to the authors for their great contribution!
 
 
