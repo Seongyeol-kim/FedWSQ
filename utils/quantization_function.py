@@ -8,14 +8,13 @@ class WSQConv2d(nn.Module):
             0.2686, 0.5439, 0.8337, 1.149, 1.508, 1.9735, 2.6536]
 
 
-    def __init__(self, n_bits=1, clip_prob=-1, scale_vector = 0.1):
+    def __init__(self, n_bits=1, clip_prob=-1):
         super(WSQConv2d, self).__init__()
         
         q_values = torch.tensor(getattr(self, f'bit{n_bits}'), dtype=torch.float32)
         self.q_values = torch.sort(q_values).values
         self.edges = 0.5 * (self.q_values[1:] + self.q_values[:-1])
         self.clip_prob = clip_prob
-        self.scale_vector = scale_vector
     
     def forward(self, x, global_x, std):
         with torch.no_grad():
@@ -29,7 +28,6 @@ class WSQConv2d(nn.Module):
                 x = torch.clamp(x, min=-clip_threshold, max=clip_threshold)
             
             local_std = x.std()
-            std = (1- self.scale_vector) * std + self.scale_vector * local_std
             x = x / std
 
             indices = torch.bucketize(x, self.edges, right=False)
@@ -55,17 +53,17 @@ def WSQ_update(model, global_model, wt_bit, args):
     for name, param in model.named_parameters():
         if hasattr(args.quantizer, 'keyword'):
             if 'first-last' in args.quantizer.keyword and name == 'conv1.weight':
-                first_quant_conv = WSQConv2d(n_bits=wt_bit, clip_prob=args.quantizer.wt_clip_prob, scale_vector= args.quantizer.scale_vector)
+                first_quant_conv = WSQConv2d(n_bits=wt_bit, clip_prob=args.quantizer.wt_clip_prob)
                 updated_param, local_std = first_quant_conv(param.data, g_params[name].data, global_std_values[name])
                 param.data.copy_(updated_param)
                 local_std_values[name] = local_std
             elif name != "conv1.weight" and ("conv1.weight" in name or "conv2.weight" in name):
-                layer_quant_conv = WSQConv2d(n_bits=wt_bit, clip_prob=args.quantizer.wt_clip_prob, scale_vector= args.quantizer.scale_vector)
+                layer_quant_conv = WSQConv2d(n_bits=wt_bit, clip_prob=args.quantizer.wt_clip_prob)
                 updated_param, local_std = layer_quant_conv(param.data, g_params[name].data, global_std_values[name])
                 param.data.copy_(updated_param)
                 local_std_values[name] = local_std
             elif "downsample.0.weight" in name:
-                quant_conv1x1 = WSQConv2d(n_bits=wt_bit, clip_prob=args.quantizer.wt_clip_prob, scale_vector= args.quantizer.scale_vector)
+                quant_conv1x1 = WSQConv2d(n_bits=wt_bit, clip_prob=args.quantizer.wt_clip_prob)
                 updated_param, local_std = quant_conv1x1(param.data, g_params[name].data, global_std_values[name])
                 param.data.copy_(updated_param)
                 local_std_values[name] = local_std
