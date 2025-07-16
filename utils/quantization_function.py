@@ -68,9 +68,9 @@ def WSQ_update(model, global_model, wt_bit, args):
                 param.data.copy_(updated_param)
                 local_std_values[name] = local_std
                 
-    momentum = args.quantizer.momentum
-
     for name, param in model.named_parameters():
-        if "global_std" in name and name != "conv1.global_std":
-            weight_name = name.replace("global_std", "weight")
-            param.data.copy_((1. - momentum) * global_std_values[weight_name] + momentum * local_std_values[weight_name])
+        if "local_std" in name:
+            weight_name = name.replace("local_std", "weight")
+            if weight_name in local_std_values:
+                std = local_std_values[weight_name] 
+                param.data.copy_(std)
