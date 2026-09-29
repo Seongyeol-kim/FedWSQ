@@ -94,6 +94,10 @@ class Trainer():
         self.start_round = 0
         if self.args.get('load_model_path'):
             self.load_model()
+
+        # Initialize server-side optimizer/momentum states
+        if hasattr(self.server, "set_momentum"):
+            self.server.set_momentum(self.model)
         
         if self.args.quantizer.name == "WSQ" and self.args.quantizer.random_bit == 'fixed_alloc':
             self.local_wt_bits = np.random.choice(np.array([1, 2, 4]), size=self.args.trainer.num_clients, replace=True)
