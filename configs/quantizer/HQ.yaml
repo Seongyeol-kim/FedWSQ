@@ -1,0 +1,5 @@
+name: "HQ"
+uplink: True
+downlink: False
+wt_bit: 8
+keyword: []

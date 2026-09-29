@@ -4,3 +4,47 @@ path: './data'
 client_path: "./client_data"
 num_instances: 0
 download: True
+
+# cutmix param.
+cutmix:
+  use: False
+  num_mix: 1
+  beta: 1
+  prob: 0.5
+  cutmix_reg: True
+
+# mixup param.
+mixup:
+  use: False
+  num_mix: 1
+  beta: 1
+  prob: 0.5
+  mixup_reg: True
+
+# cutmixup param.
+cutmixup:
+  use: False
+  num_mix: 1
+  cutmix_beta: 1
+  cutmix_prob: 0.5
+  mixup_beta: 1
+  mixup_prob: 0.5
+  use_reg: True
+
+# cutout param.
+cutout:
+  use: False
+  num_mix: 1
+  beta: 1
+  prob: 0.5
+  use_reg: True
+
+# cutmixup param.
+new_cutmixup:
+  use: False
+  cutmix_beta: 1
+  cutmix_prob: 0.1
+  mixup_beta: 1
+  mixup_prob: 0.1
+  use_reg: True
+  sigma: 1

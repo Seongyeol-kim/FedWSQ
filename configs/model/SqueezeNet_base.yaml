@@ -1,0 +1,3 @@
+## Model ##
+name: "SqueezeNet_base"
+pretrained: False

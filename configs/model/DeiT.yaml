@@ -1,0 +1,6 @@
+## Model ##
+name: "DeiT"
+pretrained: False
+
+model_name: 'deit_tiny_patch16_224'
+# 'hf_hub:hiendang7613/vit-l-tiny-imagenet'

@@ -79,7 +79,7 @@ class Trainer():
 
         test_loader = DataLoader(self.datasets["test"],
                                 batch_size=args.evaler.batch_size if args.evaler.batch_size > 0 else args.batch_size,
-                                shuffle=False, num_workers=args.num_workers)
+                                shuffle=False, num_workers=args.num_workers, pin_memory=args.pin_memory)
         eval_device = self.device if not self.args.multiprocessing else torch.device(f'cuda:{self.args.main_gpu}')
         eval_params = {
             "test_loader": test_loader,
@@ -99,67 +99,92 @@ class Trainer():
             self.local_wt_bits = np.random.choice(np.array([1, 2, 4]), size=self.args.trainer.num_clients, replace=True)
             
             
+    def _run_client_task(self, device, task):
+        """
+        Run a single client task directly.
+
+        This function contains the actual client execution logic.
+        It is shared by both single-process and multiprocessing modes.
+        """
+
+        client_idx = task['client_idx']
+
+        client = self.clients[client_idx]
+
+        local_dataset = DatasetSplitSubset(
+            self.datasets['train'],
+            idxs=self.local_dataset_split_ids[client_idx],
+            subset_classes=self.args.dataset.get('subset_classes'),
+        )
+
+        if self.args.quantizer.name == 'WSQ':
+            wt_bit = self.args.quantizer.wt_bit
+
+            if self.args.quantizer.random_bit == 'fixed_alloc':
+                wt_bit = self.local_wt_bits[client_idx]
+
+            elif self.args.quantizer.random_bit == 'rand_alloc':
+                wt_bit = np.random.choice(np.array([1, 2, 4]))
+
+            setup_inputs = {
+                'state_dict': task['state_dict'],
+                'device': device,
+                'local_dataset': local_dataset,
+                'local_lr': task['local_lr'],
+                'global_epoch': task['global_epoch'],
+                'wt_bit': wt_bit,
+                'trainer': self,
+            }
+
+        else:
+            setup_inputs = {
+                'state_dict': task['state_dict'],
+                'device': device,
+                'local_dataset': local_dataset,
+                'local_lr': task['local_lr'],
+                'global_epoch': task['global_epoch'],
+                'trainer': self,
+            }
+
+        client.setup(**setup_inputs)
+
+        local_model, local_loss_dict, local_error = client.local_train(
+            global_epoch=task['global_epoch']
+        )
+
+        self.client_errors[client_idx] = local_error
+
+        return local_model, local_loss_dict
+            
     def local_update(self, device, task_queue, result_queue):
+
         if self.args.multiprocessing:
             torch.cuda.set_device(device)
             initalize_random_seed(self.args)
 
         while True:
+
             task = task_queue.get()
-            
+
             if task is None:
                 break
-            
-            client = self.clients[task['client_idx']]
 
-            local_dataset = DatasetSplitSubset(
-                self.datasets['train'],
-                idxs=self.local_dataset_split_ids[task['client_idx']],
-                subset_classes=self.args.dataset.get('subset_classes'),
-                )
-            
-            if self.args.quantizer.name == 'WSQ':
-                wt_bit = self.args.quantizer.wt_bit
-                if self.args.quantizer.random_bit == 'fixed_alloc':
-                    wt_bit = self.local_wt_bits[task['client_idx']]
-                elif self.args.quantizer.random_bit == 'rand_alloc':
-                    wt_bit = np.random.choice(np.array([1, 2, 4]))
+            result = self._run_client_task(
+                device=device,
+                task=task
+            )
 
-                setup_inputs = {
-                    'state_dict': task['state_dict'],
-                    'device': device,
-                    'local_dataset': local_dataset,
-                    'local_lr': task['local_lr'],
-                    'global_epoch': task['global_epoch'],
-                    'wt_bit': wt_bit,
-                    'trainer': self,
-                }
-                
-            else:
-                setup_inputs = {
-                    'state_dict': task['state_dict'],
-                    'device': device,
-                    'local_dataset': local_dataset,
-                    'local_lr': task['local_lr'],
-                    'global_epoch': task['global_epoch'],
-                    'trainer': self,
-                }
-
-
-            client.setup(**setup_inputs)
-            # Local Training
-            
-            local_model, local_loss_dict , local_error = client.local_train(global_epoch=task['global_epoch'])
-            result_queue.put((local_model, local_loss_dict))
-            
-            self.client_errors[task['client_idx']] = local_error
+            result_queue.put(result)
 
             if not self.args.multiprocessing:
                 break
 
     def train(self) -> Dict:
 
-        result_queue = mp.Manager().Queue()
+        if self.args.multiprocessing:
+            result_queue = mp.Manager().Queue()
+        else:
+            result_queue = None
 
         M = max(int(self.participation_rate * self.num_clients), 1)
 
@@ -213,17 +238,26 @@ class Trainer():
                 if self.args.multiprocessing:
                     task_queues[i].put(task_queue_input)
                 else:
-                    task_queue = mp.Queue()
-                    task_queue.put(task_queue_input)
-                    self.local_update(self.device, task_queue, result_queue)
+                    local_state_dict, local_loss_dict = self._run_client_task(
+                        device=self.device,
+                        task=task_queue_input
+                    )
 
-                    local_state_dict, local_loss_dict = result_queue.get()
                     for loss_key in local_loss_dict:
-                        local_loss_dicts[loss_key].append(local_loss_dict[loss_key])
+                        local_loss_dicts[loss_key].append(
+                            local_loss_dict[loss_key]
+                        )
 
                     for param_key in local_state_dict:
-                        local_weights[param_key].append(local_state_dict[param_key])
-                        local_deltas[param_key].append(local_state_dict[param_key] - global_state_dict[param_key])
+
+                        local_weights[param_key].append(
+                            local_state_dict[param_key]
+                        )
+
+                        local_deltas[param_key].append(
+                            local_state_dict[param_key]
+                            - global_state_dict[param_key]
+                        )
 
             if self.args.multiprocessing:
                 for _ in range(len(selected_client_ids)):
@@ -385,7 +419,7 @@ class CKATrainer(Trainer):
             start = time.time()
             for i, client_idx in enumerate(selected_client_ids):
                 task_queue_input = {
-                    'state_dict': self.model.state_dict(),
+                    'state_dict': global_state_dict,
                     'client_idx': client_idx,
                     'local_lr': current_lr,
                     'global_epoch': epoch,
@@ -432,7 +466,7 @@ class CKATrainer(Trainer):
                 
             # Server-side
             updated_global_state_dict = self.server.aggregate(local_weights, local_deltas,
-                                                            selected_client_ids, copy.deepcopy(global_state_dict), current_lr, 
+                                                            selected_client_ids, global_state_dict, current_lr, 
                                                             epoch=epoch if self.args.server.get('AnalizeServer') else None)
             
             self.model.load_state_dict(updated_global_state_dict)

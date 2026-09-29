@@ -1,0 +1,8 @@
+## Model ##
+name: "ConvMixer"
+pretrained: False
+
+dim: 256
+depth: 8
+kernel_size: 9
+patch_size: 2

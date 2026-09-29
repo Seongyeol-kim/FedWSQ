@@ -1,0 +1,7 @@
+name: "NF"
+uplink: True
+downlink: False
+
+# NF
+keyword: []
+wt_bit: 4

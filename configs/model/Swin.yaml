@@ -1,0 +1,5 @@
+## Model ##
+name: "Swin"
+pretrained: False
+
+drop_prob: 0.1

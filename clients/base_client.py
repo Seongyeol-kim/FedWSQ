@@ -107,8 +107,9 @@ class Client():
             end = time.time()
 
             for i, (images, labels) in enumerate(self.loader):
-                    
-                images, labels = images.to(self.device), labels.to(self.device)
+                
+                images = images.to(self.device, non_blocking=self.args.pin_memory)
+                labels = labels.to(self.device, non_blocking=self.args.pin_memory)
                 self.model.zero_grad(set_to_none=True)
 
                 with autocast(enabled=self.args.use_amp):

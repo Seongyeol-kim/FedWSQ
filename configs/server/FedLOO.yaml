@@ -1,0 +1,9 @@
+## Server ##
+type: ServerLOO
+momentum: -1
+
+update_mode: loo_weighted
+loo_temp: 1.0
+loo_lambda: 1.0
+loo_w_min: null
+loo_w_max: null

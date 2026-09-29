@@ -1,0 +1,5 @@
+## Model ##
+name: "EfficientNet_v2"
+pretrained: False
+
+type: 's'

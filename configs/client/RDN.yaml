@@ -1,0 +1,7 @@
+## Client ##
+type: Client
+ce_loss:
+  weight: 1
+
+RDN:
+  use: True

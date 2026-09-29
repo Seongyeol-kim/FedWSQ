@@ -1,0 +1,9 @@
+## Client ##
+type: Client
+
+ce_loss:
+  weight: 1
+
+MAFL:
+  lambda: 0.2    # mixup ratio (작을수록 로컬 데이터 비중 증가 / 0.05~0.2)
+  M_k: 16       # averaging batch size (작을수록 평균 데이터가 원본에 가까움 / 8, 16, 32)

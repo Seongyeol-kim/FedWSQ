@@ -79,13 +79,18 @@ class Evaler():
 
         class_loss, class_correct, class_total = torch.zeros(C), torch.zeros(C), torch.zeros(C)
 
-        logits_all, labels_all = [], []
-
-
         with torch.no_grad():
             # for images, labels in self.loaders["test"]:
             for idx, (images, labels) in enumerate(self.test_loader):
-                images, labels = images.to(device), labels.to(device)
+                images = images.to(
+                    device,
+                    non_blocking=self.args.pin_memory
+                )
+
+                labels = labels.to(
+                    device,
+                    non_blocking=self.args.pin_memory
+                )
                 
                 labels = labels.long()
                 
@@ -104,13 +109,6 @@ class Evaler():
 
                 for class_idx, bin_label in enumerate(bin_labels):
                     class_loss[class_idx] += this_loss[(labels.cpu() == class_idx)].sum().cpu()
-
-                logits_all.append(results["logit"].data.cpu())
-                labels_all.append(labels.cpu())
-        logits_all = torch.cat(logits_all)
-        labels_all = torch.cat(labels_all)
-
-        scores = F.softmax(logits_all, 1)
 
         acc = 100. * correct / float(total)
         class_acc = 100. * class_correct / class_total

@@ -1,0 +1,4 @@
+## Client ##
+type: WonClient
+ce_loss:
+  weight: 1
