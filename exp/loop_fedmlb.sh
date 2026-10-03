@@ -19,6 +19,14 @@ for SEED in "${seeds[@]}"; do
         # Iterate over split modes
         for SPLIT_MODE in "iid" "dirichlet"; do
 
+             # Skip only: CIFAR10 + IID + seed 301
+            if [ "$DATASET" = "cifar10" ] && \
+               [ "$SPLIT_MODE" = "iid" ] && \
+               [ "$SEED" -eq 301 ]; then
+                echo "Skipping: CIFAR10 / IID / seed=301"
+                continue
+            fi
+
             if [ "$SPLIT_MODE" = "iid" ]; then
                 # For iid mode, no need to iterate over alpha
                 ALPHA=0.6

@@ -50,7 +50,14 @@ def save_checkpoint(model: Union[nn.Module, torch.jit.ScriptModule],
             save_path = output_model_path.parent / f'{output_model_path.name}.jit'
             torch.jit.save(model_script, str(save_path))
             logger.warning(f"Saved torchscript model at {save_path}")
-        except:
+
+        except Exception as e:
+            logger.warning(
+                f"Failed to save TorchScript model: {e}. "
+                f"Continue with torch state_dict saving."
+            )
+
+        if use_breakpoint:
             breakpoint()
 
     if save_torch:
